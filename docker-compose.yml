@@ -1,45 +1,21 @@
 version: "3.8"
 services:
   api1: # API - Instância 01
-    image: pablowinck/rinha-node:1.0
-    environment:
-      DATABASE_URL: postgresql://postgres:2309@db:5432/root?schema=public
+    image: rinha-backend
+    hostname: api1
     depends_on:
       - db
-    expose:
-      - "3000"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.15"
-          memory: "0.5GB"
-
-  api2: # API - Instância 02
-    image: pablowinck/rinha-node:1.0
-    environment:
-      DATABASE_URL: postgresql://postgres:2309@db:5432/root?schema=public
-    depends_on:
-      - db
-    expose:
-      - "3000"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.15"
-          memory: "0.5GB"
+    ports:
+      - "3000:3000"
 
   nginx: # Load Balancer
-    image: pablowinck/custom-ngnix:1.0
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - api1
-      - api2
     ports:
       - "9999:9999"
-    deploy:
-      resources:
-        limits:
-          cpus: "0.15"
-          memory: "0.3GB"
 
   db: # Banco de dados
     image: postgres
@@ -47,12 +23,8 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "2309"
-      POSTGRES_DB: "root"
-    deploy:
-      resources:
-        limits:
-          cpus: "1.20"
-          memory: "1.7GB"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "postgres"
+
 ## 1.5 CPU
 ## 3 GB

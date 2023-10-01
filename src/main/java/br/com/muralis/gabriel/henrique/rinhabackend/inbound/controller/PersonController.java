@@ -23,6 +23,7 @@ public class PersonController {
 
     @PostMapping
     public ResponseEntity<PersonDTO> addNewPerson(@RequestBody @Valid PersonDTO personDTO) {
+        log.info("Attempting to create.");
         PersonDTO dto = this.personFacade.addNewPerson(personDTO);
             return ResponseEntity
                     .status(201)

@@ -5,7 +5,8 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: root
-    url: jdbc:postgresql://localhost:5432/postgres?schema=public
+    url: jdbc:postgresql://db:5432/postgres?schema=public
+    #url: jdbc:postgresql://localhost:5432/postgres?schema=public
   jpa:
     hibernate:
       ddl-auto: none
