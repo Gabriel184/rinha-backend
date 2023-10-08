@@ -12,7 +12,7 @@ public interface PersonRepository extends JpaRepository<Person, String> {
     @Query(value = "SELECT COUNT(*) FROM PESSOAS", nativeQuery = true)
     Number countPeople();
 
-    @Query(value = "SELECT * FROM PESSOAS p WHERE p.apelido LIKE %:t% OR p.nome LIKE %:t% OR p.stack LIKE %:t% LIMIT 50", nativeQuery = true)
+    @Query(value = "SELECT * FROM PESSOAS p WHERE p.termodebusca LIKE %:t% LIMIT 50", nativeQuery = true)
     Set<Person> findByTerm(@Param("t") String t);
 
     boolean existsByApelido(String apelido);

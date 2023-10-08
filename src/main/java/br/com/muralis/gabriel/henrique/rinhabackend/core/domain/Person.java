@@ -34,7 +34,10 @@ public class Person {
     private String nascimento;
     @Column(length = 2000)
     private String stack;
-
+    @Getter
+    @Setter
+    @Column(name = "termodebusca", length = 2000)
+    private String termoDeBusca;
     public Person(){}
 
     public Person(PersonDTO p){
@@ -48,6 +51,7 @@ public class Person {
             this.setStack(new HashSet<>());
         else
             this.setStack(new HashSet<>(p.getStack()));
+        this.termoDeBusca = this.nome + this.apelido + this.stack;
     }
 
     public Set<String> getStack() {
@@ -66,11 +70,11 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(id, person.id) && Objects.equals(apelido, person.apelido) && Objects.equals(nome, person.nome) && Objects.equals(nascimento, person.nascimento) && Objects.equals(stack, person.stack);
+        return Objects.equals(id, person.id) && Objects.equals(apelido, person.apelido) && Objects.equals(nome, person.nome) && Objects.equals(nascimento, person.nascimento) && Objects.equals(stack, person.stack) && Objects.equals(termoDeBusca, person.termoDeBusca);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, apelido, nome, nascimento, stack);
+        return Objects.hash(id, apelido, nome, nascimento, stack, termoDeBusca);
     }
 }

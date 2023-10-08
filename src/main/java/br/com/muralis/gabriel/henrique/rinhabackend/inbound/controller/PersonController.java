@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "pessoas")
-@Slf4j
 public class PersonController {
 
     @Autowired
@@ -23,7 +22,7 @@ public class PersonController {
 
     @PostMapping
     public ResponseEntity<PersonDTO> addNewPerson(@RequestBody @Valid PersonDTO personDTO) {
-        log.info("Attempting to create.");
+        //log.info("Attempting to create.");
         PersonDTO dto = this.personFacade.addNewPerson(personDTO);
             return ResponseEntity
                     .status(201)

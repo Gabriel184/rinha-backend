@@ -21,7 +21,7 @@ public class PersonFacadeImpl implements PersonFacade {
     @Override
     public PersonDTO addNewPerson(PersonDTO dto) {
         var p = this.personMapper.toPerson(dto);
-        p = this.personService.addNewPerson(p);
+        this.personService.addNewPerson(p);
         return this.personMapper.toDTO(p);
     }
 

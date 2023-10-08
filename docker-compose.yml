@@ -1,30 +1,68 @@
 version: "3.8"
 services:
   api1: # API - Instância 01
-    image: rinha-backend
+    image: gabrielhenriq/rinha-backend
     hostname: api1
+    expose:
+      - "3000"
     depends_on:
       - db
-    ports:
-      - "3000:3000"
+    #environment:
+    #  - SERVER_PORT=3000
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "0.700B"
+  api2: # API - Instância 02
+    image: gabrielhenriq/rinha-backend
+    hostname: api2
+    expose:
+      - "3000"
+    depends_on:
+      - db
+    #environment:
+    #  - SERVER_PORT=3001
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "0.700GB"
+
 
   nginx: # Load Balancer
-    image: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - api1
+    image: gabrielhenriq/nginx-rinha
+    command: ["nginx", "-g", "daemon off;"]
     ports:
       - "9999:9999"
+    depends_on:
+      - api1
+      - api2
+    deploy:
+      resources:
+        limits:
+          cpus: "0.15"
+          memory: "0.3GB"
 
   db: # Banco de dados
     image: postgres
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "root"
       POSTGRES_DB: "postgres"
-
+    command: postgres -c 'max_connections=450'
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.35"
+          memory: "1.3GB"
 ## 1.5 CPU
 ## 3 GB

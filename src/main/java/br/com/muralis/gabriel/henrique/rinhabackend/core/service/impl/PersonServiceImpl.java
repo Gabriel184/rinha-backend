@@ -101,7 +101,7 @@ public class PersonServiceImpl implements PersonService {
     public Person addNewPerson(Person p) {
         this.validateAddNewPerson(p);
         p.setId(UUID.randomUUID().toString());
-        p = personRepository.saveAndFlush(p);
+        personRepository.saveAndFlush(p);
         nicknames.add(p.getApelido());
         return p;
     }
