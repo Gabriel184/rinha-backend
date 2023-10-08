@@ -27,6 +27,8 @@ public class PersonServiceImpl implements PersonService {
 
     private final Pattern DatePattern = Pattern.compile("yyyy-MM-dd");
 
+    private final String EMPTY_STRING = "";
+
     public final Set<String> nicknames = new HashSet<>(1000);
 
     @Override
@@ -34,50 +36,50 @@ public class PersonServiceImpl implements PersonService {
         if (p.getNome() != null) {
             try {
                 Integer.parseInt(p.getNome());
-                throw DomainException400.my400ErrorDescription("Name cannot be a number.");
+                throw DomainException400.my400ErrorDescription(EMPTY_STRING);
             } catch (NumberFormatException ignored) {
 
             }
             if (p.getNome().length() > 100)
-                throw DomainException422.my422ErrorDescription("Name only can be under 100 chars.");
+                throw DomainException422.my422ErrorDescription(EMPTY_STRING);
         } else {
-            throw DomainException422.my422ErrorDescription("Name cannot be null.");
+            throw DomainException422.my422ErrorDescription(EMPTY_STRING);
         }
 
         if (p.getApelido() != null) {
             try {
                 Integer.parseInt(p.getApelido());
-                throw DomainException400.my400ErrorDescription("NickName cannot be a number.");
+                throw DomainException400.my400ErrorDescription(EMPTY_STRING);
             } catch (NumberFormatException ignored) {
 
             }
             if (p.getApelido().length() > 32)
-                throw DomainException422.my422ErrorDescription("NickName only can be under 32 chars.");
+                throw DomainException422.my422ErrorDescription(EMPTY_STRING);
             if (this.alreadyHasNicknamePersisted(p.getApelido()))
-                throw DomainException422.my422ErrorDescription("NickName duplicated");
+                throw DomainException422.my422ErrorDescription(EMPTY_STRING);
         } else {
-            throw DomainException422.my422ErrorDescription("Nickname cannot be null.");
+            throw DomainException422.my422ErrorDescription(EMPTY_STRING);
         }
         if (p.getNascimento() != null) {
             if (p.getNascimento().matches(DatePattern.pattern()))
-                throw DomainException404.my404ErrorDescription("Invalid date, the date is not in a correct pattern yyyy-MM-dd");
+                throw DomainException404.my404ErrorDescription(EMPTY_STRING);
 
             try {
                 var date = LocalDate.parse(p.getNascimento());
             } catch (DateTimeException ex) {
-                throw DomainException422.my422ErrorDescription("Invalid date.");
+                throw DomainException422.my422ErrorDescription(EMPTY_STRING);
             }
         } else {
-            throw DomainException422.my422ErrorDescription("BirthDate cannot be null.");
+            throw DomainException422.my422ErrorDescription(EMPTY_STRING);
         }
         if (p.getStack() != null) {
             long haveNullElements = p.getStack().stream().filter(e -> e.equals("null")).count();
             if (haveNullElements != 0)
-                throw DomainException422.my422ErrorDescription("Stack cannot contains null elements.");
+                throw DomainException422.my422ErrorDescription(EMPTY_STRING);
             p.getStack().stream().forEach(e -> {
                 try {
                     Integer.parseInt(e);
-                    throw DomainException400.my400ErrorDescription("Stack cannot contains number elements.");
+                    throw DomainException400.my400ErrorDescription(EMPTY_STRING);
                 } catch (NumberFormatException ignored) {
 
                 }
@@ -88,13 +90,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void validateUUIDFindPerson(String id) {
-        String idToValidate = Optional.ofNullable(id).orElseThrow(() -> DomainException404.my404ErrorDescription("Invalid id."));
+        String idToValidate = Optional.ofNullable(id).orElseThrow(() -> DomainException404.my404ErrorDescription(EMPTY_STRING));
         if (idToValidate.isEmpty())
-            throw DomainException404.my404ErrorDescription("Invalid id, the id is empty.");
+            throw DomainException404.my404ErrorDescription(EMPTY_STRING);
         if (idToValidate.length() < 36)
-            throw DomainException404.my404ErrorDescription("Invalid id, the id does not is long enough.");
+            throw DomainException404.my404ErrorDescription(EMPTY_STRING);
         if (!idToValidate.matches(UUIDRegex.pattern()))
-            throw DomainException404.my404ErrorDescription("Invalid id, the id does not is a valid UUID");
+            throw DomainException404.my404ErrorDescription(EMPTY_STRING);
     }
 
     @Override
@@ -109,7 +111,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person findPersonById(String id) {
         this.validateUUIDFindPerson(id);
-        return this.personRepository.findById(id).orElseThrow(() -> DomainException404.my404ErrorDescription("Person not found."));
+        return this.personRepository.findById(id).orElseThrow(() -> DomainException404.my404ErrorDescription(EMPTY_STRING));
     }
 
     @Override
@@ -131,7 +133,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private void needToClearNickNameSet(){
-        if (this.nicknames.size() > 3000)
+        if (this.nicknames.size() > 5000)
             this.nicknames.clear();
     }
 }
